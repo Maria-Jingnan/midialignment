@@ -1513,21 +1513,28 @@ function UpdateMatchData(){
 document.getElementById('downloadButton').addEventListener('click', function(event){
 	UpdateMatchData();
 	let str='';
+	/*
 	for(let i=0;i<matchCommentsArray.length;i+=1){
 		str+=matchCommentsArray[i]+"\n";
 	}//endfor i
+	*/
+	str += "ID,onset time,offset time,spelled pitch,onset velocity,offset velocity,channel,match status,score time,note ID,error index,skip index\n";
 	for(let n=0;n<matchEventsArray.length;n+=1){
 		let evt=matchEventsArray[n];
-		str+=evt.ID+"\t"+evt.ontime+"\t"+evt.offtime+"\t"+evt.sitch+"\t"+evt.onvel+"\t"+evt.offvel+"\t"+evt.channel+"\t";
-		str+=evt.matchStatus+"\t"+evt.stime+"\t"+evt.fmt1ID+"\t"+evt.errorInd+"\t"+evt.skipInd+"\n";
+		str+=evt.ID+","+evt.ontime+","+evt.offtime+","+evt.sitch+","+evt.onvel+","+evt.offvel+","+evt.channel+",";
+		str+=evt.matchStatus+","+evt.stime+","+evt.fmt1ID+","+evt.errorInd+","+evt.skipInd+"\n";
 	}//endfor n
+	let warning='';
 	for(let i=0;i<missingNotesArray.length;i+=1){
-		str+="//Missing "+missingNotesArray[i].stime+"\t"+missingNotesArray[i].fmt1ID+"\n";
+		warning+="//Missing "+missingNotesArray[i].stime+","+missingNotesArray[i].fmt1ID+"\n";
 	}//endfor i
+	if (missingNotesArray.length > 0) {
+		alert(warning);
+	}
 
 	const a = document.createElement('a');
 	a.href = URL.createObjectURL(new Blob([str], {type: 'text/plain'}));
-	a.download = 'match.txt';
+	a.download = 'match.csv';
 	a.style.display = 'none';
 	document.body.appendChild(a);
 	a.click();
